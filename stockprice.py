@@ -3,7 +3,6 @@
 
 from datetime import datetime
 
-# Hardcoded stock prices
 stock_prices = {
     "AAPL": 180,
     "TSLA": 250,
@@ -18,7 +17,6 @@ print("📊 Available Stocks:")
 for stock, price in stock_prices.items():
     print(f"- {stock}: ₹{price}")
 
-# User input loop
 while True:
     stock = input("\nEnter stock name (or 'done' to finish): ").upper().strip()
 
@@ -39,10 +37,8 @@ while True:
 
     portfolio[stock] = portfolio.get(stock, 0) + quantity
 
-# Timestamp
 timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
-# Sort portfolio by highest value
 sorted_portfolio = sorted(
     portfolio.items(),
     key=lambda item: stock_prices[item[0]] * item[1],
@@ -59,8 +55,8 @@ for stock, qty in sorted_portfolio:
 print(f"\n💰 Total Investment Value: ₹{total_investment}")
 print(f"🕒 Generated on: {timestamp}")
 
-# Save to file
-with open("portfolio.txt", "w") as file:
+# ✅ FIX HERE (encoding added)
+with open("portfolio.txt", "w", encoding="utf-8") as file:
     file.write("Stock Portfolio Summary\n")
     file.write(f"Generated on: {timestamp}\n")
     file.write("-" * 40 + "\n")
