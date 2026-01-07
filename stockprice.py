@@ -2,6 +2,7 @@
 # Author: Riddhi Karetha
 
 from datetime import datetime
+import csv
 
 stock_prices = {
     "AAPL": 180,
@@ -17,6 +18,7 @@ print("📊 Available Stocks:")
 for stock, price in stock_prices.items():
     print(f"- {stock}: ₹{price}")
 
+# Input loop
 while True:
     stock = input("\nEnter stock name (or 'done' to finish): ").upper().strip()
 
@@ -39,33 +41,52 @@ while True:
 
 timestamp = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
 
+# Sort by value
 sorted_portfolio = sorted(
     portfolio.items(),
     key=lambda item: stock_prices[item[0]] * item[1],
     reverse=True
 )
 
-print("\n📈 Portfolio Summary (Sorted by Value):")
+print("\n📈 Portfolio Summary:")
 for stock, qty in sorted_portfolio:
     price = stock_prices[stock]
     value = price * qty
+    avg_price = value / qty
     total_investment += value
-    print(f"{stock} | Price: ₹{price} | Qty: {qty} | Value: ₹{value}")
+
+    print(
+        f"{stock} | Qty: {qty} | "
+        f"Avg Price: ₹{avg_price:.2f} | "
+        f"Value: ₹{value}"
+    )
 
 print(f"\n💰 Total Investment Value: ₹{total_investment}")
 print(f"🕒 Generated on: {timestamp}")
 
-# ✅ FIX HERE (encoding added)
+# Save TXT file
 with open("portfolio.txt", "w", encoding="utf-8") as file:
     file.write("Stock Portfolio Summary\n")
     file.write(f"Generated on: {timestamp}\n")
-    file.write("-" * 40 + "\n")
+    file.write("-" * 50 + "\n")
     for stock, qty in sorted_portfolio:
         file.write(
-            f"{stock} | Price: ₹{stock_prices[stock]} | "
-            f"Qty: {qty} | Value: ₹{stock_prices[stock] * qty}\n"
+            f"{stock} | Qty: {qty} | "
+            f"Value: ₹{stock_prices[stock] * qty}\n"
         )
-    file.write("-" * 40 + "\n")
+    file.write("-" * 50 + "\n")
     file.write(f"Total Investment: ₹{total_investment}")
 
-print("\n✅ Portfolio saved successfully to portfolio.txt")
+# 🔹 CSV EXPORT (NEW)
+with open("portfolio.csv", "w", newline="", encoding="utf-8") as csvfile:
+    writer = csv.writer(csvfile)
+    writer.writerow(["Stock", "Quantity", "Price", "Total Value"])
+    for stock, qty in sorted_portfolio:
+        writer.writerow([
+            stock,
+            qty,
+            stock_prices[stock],
+            stock_prices[stock] * qty
+        ])
+
+print("\n✅ Portfolio saved to portfolio.txt and portfolio.csv")
